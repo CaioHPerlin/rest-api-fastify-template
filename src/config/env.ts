@@ -2,14 +2,12 @@ import fastify from "fastify";
 import { z } from "zod";
 
 const environmentSchema = z.object({
-    NODE_ENV: z
-        .enum(["development", "production"])
-        .default("development"),
+    NODE_ENV: z.enum(["development", "production"]).default("development"),
     PORT: z.coerce.number().default(3001),
 
     POSTGRES_DB: z.string().min(1),
-    POSTGRES_HOST: z.string().default('localhost'),
-    POSTGRES_USER: z.string().default('postgres'),
+    POSTGRES_HOST: z.string().default("localhost"),
+    POSTGRES_USER: z.string().default("postgres"),
     POSTGRES_PASSWORD: z.string().min(1),
     POSTGRES_PORT: z.coerce.number().default(5432),
 });
@@ -17,7 +15,7 @@ const environmentSchema = z.object({
 const parsedEnv = environmentSchema.safeParse(process.env);
 if (!parsedEnv.success) {
     console.error("Invalid environment variables:\n", z.treeifyError(parsedEnv.error).properties);
-    throw new Error('Invalid environment configuration.')
+    throw new Error("Invalid environment configuration.");
 }
 
 const env = parsedEnv.data;
@@ -36,4 +34,3 @@ export default {
     ...env,
     POSTGRES_URL: buildPostgresUrl(env),
 };
-
