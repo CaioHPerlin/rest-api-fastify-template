@@ -1,17 +1,15 @@
-import fastify from "fastify";
-import crypto from "node:crypto";
-import logger from "./config/logger.ts";
 import env from "./config/env.ts";
+import buildApp from "./app.ts";
 
-const server = fastify({
-    logger: logger,
-});
+async function bootstrap() {
+    const app = await buildApp();
 
-server.get("/ping", (_, reply) => {
-    return reply.status(200).send({
-        message: `pong!`,
-        foo: crypto.randomUUID(),
-    });
-});
+    try {
+        app.listen({ port: env.PORT });
+    } catch (error) {
+        app.log.error(error);
+        process.exit(1);
+    }
+}
 
-server.listen({ port: env.PORT });
+bootstrap();

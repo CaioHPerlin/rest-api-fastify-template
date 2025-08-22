@@ -1,4 +1,3 @@
-import fastify from "fastify";
 import { z } from "zod";
 
 const environmentSchema = z.object({
